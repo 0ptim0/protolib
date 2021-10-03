@@ -6,6 +6,8 @@
 #define TFEND   0xDC
 #define TFESC   0xDD
 
+#define BUF_SIZE 128
+
 struct wake_packet_t {
     uint8_t to;
     uint8_t cmd;
@@ -21,11 +23,13 @@ private:
     uint8_t TakeFromPacket(uint8_t *data);
     uint8_t CheckCRC(void);
 public:
-    uint8_t buf[256];
+    uint8_t buf[BUF_SIZE];
     uint8_t buf_length;
     wake_class() : buf_length(0) {}
     uint8_t Packing(wake_packet_t *packet);
     uint8_t Unpacking(wake_packet_t *packet);
     uint8_t GetBufLength(void);
+    uint8_t GetBufSize(void);
     uint8_t *GetBufPtr(void);
+    uint8_t ClearBuf(void);
 };

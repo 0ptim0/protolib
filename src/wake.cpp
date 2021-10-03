@@ -81,6 +81,11 @@ uint8_t wake_class::GetBufLength(void)
     return buf_length;
 }
 
+uint8_t wake_class::GetBufSize(void)
+{
+    return BUF_SIZE - 1;
+}
+
 uint8_t *wake_class::GetBufPtr(void)
 {
     return buf;
@@ -92,5 +97,13 @@ uint8_t wake_class::CheckCRC(void)
     crcc = crc8(buf, buf_length);
     crcr = TakeFromPacket(&crcr);
     if(crcc != crcr) return EPROTO;
+    return 0;
+}
+
+uint8_t wake_class::ClearBuf(void)
+{
+    for(int i = 0; i < BUF_SIZE; i++) {
+        buf[i] = 0;
+    }
     return 0;
 }
