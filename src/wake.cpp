@@ -101,6 +101,12 @@ uint8_t *wake_class::GetBufPtr(void)
     return buf;
 }
 
+uint8_t wake_class::GetBufLength(void)
+{
+    return buf_length;
+}
+
+
 uint8_t wake_class::CheckCRC(void)
 {
     uint8_t crcr, crcc;

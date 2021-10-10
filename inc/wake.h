@@ -32,4 +32,5 @@ public:
     uint8_t Unpacking(wake_packet_t *packet);
     uint8_t GetBufSize(void);
     uint8_t *GetBufPtr(void);
+    uint8_t GetBufLength(void);
 };
