@@ -13,7 +13,7 @@ struct wake_packet_t {
     uint8_t cmd;
     uint8_t length;
     uint8_t *data;
-    uint8_t err;
+    uint8_t max_data_length;
 };
 
 class wake_class {
@@ -22,14 +22,14 @@ private:
     void AddToPacket(uint8_t data);
     uint8_t TakeFromPacket(uint8_t *data);
     uint8_t CheckCRC(void);
-public:
+    uint8_t CheckDataLength(uint8_t length, uint8_t max_length);
     uint8_t buf[BUF_SIZE];
     uint8_t buf_length;
+    uint8_t ClearBuf(void);
+public:
     wake_class() : buf_length(0) {}
     uint8_t Packing(wake_packet_t *packet);
     uint8_t Unpacking(wake_packet_t *packet);
-    uint8_t GetBufLength(void);
     uint8_t GetBufSize(void);
     uint8_t *GetBufPtr(void);
-    uint8_t ClearBuf(void);
 };

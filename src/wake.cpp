@@ -56,6 +56,7 @@ uint8_t wake_class::Packing(wake_packet_t *packet)
         AddToPacket(packet->data[i]);
     }
     AddToPacket(crc8(buf, buf_length));
+
     return 0;
 }
 
@@ -70,15 +71,24 @@ uint8_t wake_class::Unpacking(wake_packet_t *packet)
     TakeFromPacket(&packet->to);
     TakeFromPacket(&packet->cmd);
     TakeFromPacket(&packet->length);
+
+    if(CheckDataLength(packet->length, packet->max_data_length)) {
+        ClearBuf();
+        return EPROTO;
+    }
+
     for(int i = 0; i < packet->length; i++) {
         TakeFromPacket(&packet->data[i]);
     }
-    return CheckCRC();
-}
 
-uint8_t wake_class::GetBufLength(void)
-{
-    return buf_length;
+    if(CheckCRC()) {
+        ClearBuf();
+        return EPROTO;
+    }
+
+    ClearBuf();
+
+    return 0;
 }
 
 uint8_t wake_class::GetBufSize(void)
@@ -95,8 +105,18 @@ uint8_t wake_class::CheckCRC(void)
 {
     uint8_t crcr, crcc;
     crcc = crc8(buf, buf_length);
-    crcr = TakeFromPacket(&crcr);
-    if(crcc != crcr) return EPROTO;
+    TakeFromPacket(&crcr);
+    if(crcc != crcr) {
+        return EPROTO;
+    }
+    return 0;
+}
+
+uint8_t wake_class::CheckDataLength(uint8_t length, uint8_t max_data_length)
+{
+    if(length > max_data_length) {
+        return EPROTO;
+    }
     return 0;
 }
 
